@@ -15,6 +15,8 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   late int _currentTime;
   late Timer _timer;
+  int _currentindex = 0;
+  String _selectedAnswer = '';
   @override
   void initState() {
     super.initState();
@@ -38,11 +40,13 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currnetQuestion = widget.questions[_currentindex];
     return Scaffold(
       body: GradientBox(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 40),
               SizedBox(
@@ -67,6 +71,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 40),
               Text(
                 'Question',
                 style: TextStyle(
@@ -74,6 +79,38 @@ class _QuizScreenState extends State<QuizScreen> {
                   color: Colors.white,
                 ),
               ),
+              Text(
+                currnetQuestion.question,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    final answer = currnetQuestion.answers[index];
+                    return Card(
+                      color: _selectedAnswer == answer &&
+                              answer == currnetQuestion.correctAnswer
+                          ? Colors.green
+                          : null,
+                      child: ListTile(
+                        onTap: () {
+                          setState(() {
+                            _selectedAnswer = answer;
+                          });
+                        },
+                        title: Text(
+                          answer,
+                          style: TextStyle(fontSize: 10, color: Colors.black),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: currnetQuestion.answers.length,
+                ),
+              )
             ],
           ),
         ),

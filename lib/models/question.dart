@@ -81,7 +81,7 @@ List<Question> question = [
     id: '1',
     question: 'Which of the following widgets used for repeating the content',
     answers: ['Expanded', 'ListView', 'Stack', 'Scaffold'],
-    correctAnswer: 'Listview',
+    correctAnswer: 'ListView',
   ),
   Question(
     id: '2',
