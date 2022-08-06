@@ -3,6 +3,8 @@ import 'package:quizzapp/components/gradient_box.dart';
 import 'package:quizzapp/screens/quiz_screen.dart';
 import 'package:quizzapp/models/question.dart';
 
+import '../components/action_button.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -26,23 +28,18 @@ class HomeScreen extends StatelessWidget {
                 height:
                     40), // yo size box chai tyo button ra mathi ko quizz app lekhya thau ma space rakhna
 
-            SizedBox(
-              height: 50,
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {
-                  // yha chai navigator banaudai xuu arko screen ma switch huna
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => QuizScreen(
-                        totalTime: 10,
-                        questions: question,
-                      ),
+            ActionButton(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => QuizScreen(
+                      totalTime: 10,
+                      questions: question,
                     ),
-                  );
-                },
-                child: Text('Start'),
-              ),
+                  ),
+                );
+              },
+              title: 'Start',
             ),
           ],
         ),

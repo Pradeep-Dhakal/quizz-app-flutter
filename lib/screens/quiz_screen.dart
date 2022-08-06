@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:quizzapp/components/gradient_box.dart';
 import 'package:quizzapp/models/question.dart';
+import 'package:quizzapp/screens/result_screen.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({Key? key, required this.totalTime, required this.questions})
@@ -17,6 +18,7 @@ class _QuizScreenState extends State<QuizScreen> {
   late Timer _timer;
   int _currentindex = 0;
   String _selectedAnswer = '';
+  int _score = 0;
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,7 @@ class _QuizScreenState extends State<QuizScreen> {
       });
       if (_currentTime == 0) {
         _timer.cancel();
+        pushResultScreen(context);
       }
     });
   }
@@ -40,7 +43,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currnetQuestion = widget.questions[_currentindex];
+    final currentQuestion = widget.questions[_currentindex];
     return Scaffold(
       body: GradientBox(
         child: Padding(
@@ -80,7 +83,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
               ),
               Text(
-                currnetQuestion.question,
+                currentQuestion.question,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -89,27 +92,32 @@ class _QuizScreenState extends State<QuizScreen> {
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    final answer = currnetQuestion.answers[index];
-                    return Card(
-                      color: _selectedAnswer == answer &&
-                              answer == currnetQuestion.correctAnswer
-                          ? Colors.green
-                          : null,
-                      child: ListTile(
-                        onTap: () {
+                    final answer = currentQuestion.answers[index];
+                    return AnswerTile(
+                      isSelected: answer == _selectedAnswer,
+                      answer: answer,
+                      correctAnswer: currentQuestion.correctAnswer,
+                      onTap: () {
+                        setState(() {
+                          _selectedAnswer = answer;
+                        });
+                        if (answer == currentQuestion.correctAnswer) {
+                          _score++;
+                        }
+                        Future.delayed(Duration(microseconds: 200), () {
+                          if (_currentindex == question.length - 1) {
+                            pushResultScreen(context);
+                            return;
+                          }
                           setState(() {
-                            _selectedAnswer = answer;
+                            _currentindex++;
+                            _selectedAnswer = '';
                           });
-                        },
-                        
-                        title: Text(
-                          answer,
-                          style: TextStyle(fontSize: 10, color: Colors.black),
-                        ),
-                      ),
+                        });
+                      },
                     );
                   },
-                  itemCount: currnetQuestion.answers.length,
+                  itemCount: currentQuestion.answers.length,
                 ),
               )
             ],
@@ -117,5 +125,58 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       ),
     );
+  }
+
+  void pushResultScreen(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => ResultScreen(
+          totalQuestions: widget.questions.length,
+          score: _score,
+        ),
+      ),
+    );
+  }
+}
+
+class AnswerTile extends StatelessWidget {
+  const AnswerTile({
+    Key? key,
+    required this.isSelected,
+    required this.answer,
+    required this.correctAnswer,
+    required this.onTap,
+  }) : super(key: key);
+
+  final bool isSelected;
+  final String answer;
+  final String correctAnswer;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: cardColor,
+      child: ListTile(
+        onTap: () => onTap(),
+        title: Text(
+          answer,
+          style: TextStyle(
+            fontSize: 18,
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color get cardColor {
+    if (!isSelected) return Colors.white;
+
+    if (answer == correctAnswer) {
+      return Colors.teal;
+    }
+
+    return Colors.redAccent;
   }
 }
