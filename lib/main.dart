@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screencreen.dart';
+import 'package:quizzapp/providers/quiz_provider.dart';
+import 'screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
-Future<void> main() async {
+// https://youtu.be/s6hqyJPa6Xw?t=859
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => QuizProvider(),
+      child: Builder(builder: (context) {
+        return MyApp();
+      }),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Quizz App',
+      title: 'Hajir Jawaf',
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
-
-// https://youtu.be/GPDtDcAAoSo?t=659

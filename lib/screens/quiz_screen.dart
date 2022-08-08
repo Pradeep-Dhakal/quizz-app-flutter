@@ -5,10 +5,15 @@ import 'package:quizzapp/models/question.dart';
 import 'package:quizzapp/screens/result_screen.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({Key? key, required this.totalTime, required this.questions})
-      : super(key: key);
+  const QuizScreen({
+    Key? key,
+    required this.totalTime,
+    required this.questions,
+  }) : super(key: key);
+
   final int totalTime;
   final List<Question> questions;
+
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
@@ -16,18 +21,21 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   late int _currentTime;
   late Timer _timer;
-  int _currentindex = 0;
+  int _currentIndex = 0;
   String _selectedAnswer = '';
   int _score = 0;
+
   @override
   void initState() {
     super.initState();
     _currentTime = widget.totalTime;
 
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      print(_currentTime);
       setState(() {
         _currentTime -= 1;
       });
+
       if (_currentTime == 0) {
         _timer.cancel();
         pushResultScreen(context);
@@ -43,7 +51,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestion = widget.questions[_currentindex];
+    final currentQuestion = widget.questions[_currentIndex];
     return Scaffold(
       body: GradientBox(
         child: Padding(
@@ -63,12 +71,14 @@ class _QuizScreenState extends State<QuizScreen> {
                         value: _currentTime / widget.totalTime,
                       ),
                       Center(
-                        child: Text("${_currentTime.toString()} सेकेन्ड बाँकि ",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
+                        child: Text(
+                          _currentTime.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -76,12 +86,13 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
               SizedBox(height: 40),
               Text(
-                'Question',
+                'प्रश्न',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
                 ),
               ),
+              SizedBox(height: 10),
               Text(
                 currentQuestion.question,
                 style: TextStyle(
@@ -89,6 +100,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   fontSize: 24,
                 ),
               ),
+              Spacer(),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -101,16 +113,18 @@ class _QuizScreenState extends State<QuizScreen> {
                         setState(() {
                           _selectedAnswer = answer;
                         });
+
                         if (answer == currentQuestion.correctAnswer) {
                           _score++;
                         }
-                        Future.delayed(Duration(microseconds: 200), () {
-                          if (_currentindex == question.length - 1) {
+
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          if (_currentIndex == widget.questions.length - 1) {
                             pushResultScreen(context);
                             return;
                           }
                           setState(() {
-                            _currentindex++;
+                            _currentIndex++;
                             _selectedAnswer = '';
                           });
                         });
@@ -131,7 +145,8 @@ class _QuizScreenState extends State<QuizScreen> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => ResultScreen(
-          totalQuestions: widget.questions.length,
+          questions: widget.questions,
+          totalTime: widget.totalTime,
           score: _score,
         ),
       ),
