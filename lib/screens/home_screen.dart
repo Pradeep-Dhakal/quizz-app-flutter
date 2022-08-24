@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: prefer_const_constructors_in_immutables, library_private_types_in_public_api, prefer_final_fields, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzapp/components/gradient_box.dart';
 import 'package:quizzapp/providers/quiz_provider.dart';
 import 'package:quizzapp/screens/quiz_screen.dart';
-import 'package:quizzapp/models/question.dart';
 
 import '../components/action_button.dart';
 import '../components/rank_auth_button.dart';
@@ -21,8 +21,10 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // ignore: prefer_const_constructors
               Text(
-                'हाजिर जवाफ',
+                'Quizer Pro',
+                // ignore: prefer_const_constructors
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 40,

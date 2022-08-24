@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Hajir Jawaf',
+      title: 'Quizwer',
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),

@@ -86,7 +86,7 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
               SizedBox(height: 40),
               Text(
-                'प्रश्न',
+                'Question',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -100,7 +100,9 @@ class _QuizScreenState extends State<QuizScreen> {
                   fontSize: 24,
                 ),
               ),
-              Spacer(),
+              SizedBox(
+                height: 60,
+              ),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -133,7 +135,10 @@ class _QuizScreenState extends State<QuizScreen> {
                   },
                   itemCount: currentQuestion.answers.length,
                 ),
-              )
+              ),
+              SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),
